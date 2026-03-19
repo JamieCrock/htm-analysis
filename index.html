@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTM 2025 vs HTM 03-01 | NHS Ventilation Standards Analysis</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:Helvetica,Arial,sans-serif;background:#07111f;color:#ddd8cc;min-height:100vh}
+
+/* ─── CSS VARIABLES ─── */
+:root{
+  --bg:#07111f;
+  --bg2:#0d1e35;
+  --bg3:#111f38;
+  --border:rgba(61,143,192,0.2);
+  --sky:#3d8fc0;
+  --sky2:#6db3d8;
+  --gold:#c8a054;
+  --gold2:#dfc07e;
+  --cream:#ddd8cc;
+  --grey:#7a8fa8;
+  --grey2:#a0b4c8;
+  --red:#bf4040;
+  --red2:#d87060;
+  --amber:#bf7a20;
+  --amber2:#d8a050;
+  --green:#2a7a50;
+  --green2:#50a878;
+  --white:#fff;
+}
+
+/* ─── HEADER ─── */
+#hdr{position:sticky;top:0;z-index:999;background:#07111ffa;border-bottom:1px solid var(--border);padding:0 24px}
+#hdr-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;gap:14px;height:58px}
+.badge{background:var(--sky);color:#07111f;font-size:10px;font-weight:700;letter-spacing:.14em;padding:3px 8px;border-radius:2px;white-space:nowrap}
+#hdr-title{font-size:13px;color:var(--grey2)}
+#hdr-date{margin-left:auto;font-size:11px;color:var(--grey);font-family:'Courier New',monospace;white-space:nowrap}
+
+/* ─── TAB BAR ─── */
+#tabs{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto}
+#tabs::-webkit-scrollbar{display:none}
+#tabs-inner{max-width:1300px;margin:0 auto;display:flex;white-space:nowrap}
+.tb{background:none;border:none;border-bottom:3px solid transparent;color:var(--grey);cursor:pointer;font-size:13px;font-weight:600;letter-spacing:.02em;margin-bottom:-1px;padding:13px 15px;transition:color .15s,border-color .15s;white-space:nowrap}
+.tb:hover{color:var(--sky2)}
+.tb.on{color:var(--sky2);border-bottom-color:var(--sky)}
+
+/* ─── HERO ─── */
+#hero{background:linear-gradient(168deg,#050d1a 0%,#09182e 55%,#0d1e38 100%);padding:56px 24px 48px;text-align:center;border-bottom:1px solid var(--border)}
+#hero-inner{max-width:860px;margin:0 auto}
+.eyebrow{font-size:10px;letter-spacing:.22em;color:var(--sky);text-transform:uppercase;margin-bottom:18px;font-family:'Courier New',monospace}
+#hero h1{font-family:Georgia,serif;font-size:clamp(24px,4.5vw,48px);font-weight:normal;color:var(--white);line-height:1.2;margin-bottom:14px}
+#hero h1 em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:14px;color:var(--grey2);max-width:600px;margin:0 auto 32px;line-height:1.7}
+.doc-pills{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.dp{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 20px;text-align:left;min-width:200px;max-width:270px}
+.dp-tag{font-size:9px;letter-spacing:.12em;color:var(--sky);text-transform:uppercase;margin-bottom:5px;font-family:'Courier New',monospace}
+.dp h3{font-family:Georgia,serif;font-size:17px;font-weight:normal;color:var(--white);margin-bottom:5px}
+.dp p{font-size:12px;color:var(--grey);line-height:1.5}
+.dp-yr{display:inline-block;margin-top:7px;background:var(--gold);color:#07111f;font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;font-family:'Courier New',monospace}
+.vs{width:40px;height:40px;border-radius:50%;background:#1e3a5a;border:2px solid var(--sky);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:13px;color:var(--sky2);flex-shrink:0}
+
+/* ─── MAIN ─── */
+#main{max-width:1300px;margin:0 auto;padding:36px 24px 72px}
+
+/* ─── PANELS ─── */
+.panel{display:none}
+.panel.on{display:block}
+
+/* ─── STATS ─── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:28px}
+.sbox{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:18px 12px;text-align:center}
+.sn{font-family:Georgia,serif;font-size:32px;line-height:1;margin-bottom:4px;color:var(--white)}
+.sn.sky{color:var(--sky2)}.sn.gold{color:var(--gold2)}.sn.red{color:var(--red2)}
+.sl{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--grey);font-family:'Courier New',monospace}
+
+/* ─── TWO COL ─── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.icard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:22px}
+.icard h2{font-family:Georgia,serif;font-size:21px;font-weight:normal;color:var(--white);margin-bottom:3px}
+.ic-sub{font-size:9px;letter-spacing:.1em;color:var(--sky);text-transform:uppercase;margin-bottom:16px;font-family:'Courier New',monospace}
+.mr{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12.5px}
+.mr:last-child{border-bottom:none}
+.mk{color:var(--grey);flex-shrink:0}
+.mv{color:var(--cream);text-align:right}.mv.hi{color:var(--gold2)}
+
+/* ─── CALLOUT ─── */
+.callout{background:rgba(61,143,192,.06);border:1px solid rgba(61,143,192,.25);border-radius:8px;padding:22px 26px;margin-bottom:24px}
+.callout h3{font-family:Georgia,serif;font-size:17px;font-weight:normal;color:var(--sky2);margin-bottom:12px}
+.callout ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.callout li{font-size:13px;color:var(--grey2);padding-left:16px;position:relative;line-height:1.6}
+.callout li::before{content:"›";position:absolute;left:0;color:var(--sky);font-weight:700;font-size:15px;line-height:1.35}
+.callout li strong{color:var(--cream)}
+
+/* ─── SEC HEADER ─── */
+.sh{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sh h2{font-family:Georgia,serif;font-size:24px;font-weight:normal;color:var(--white);margin-bottom:3px}
+.sh p{font-size:13px;color:var(--grey);line-height:1.6}
+
+/* ─── TABLE ─── */
+.tw{overflow-x:auto;border-radius:8px;border:1px solid var(--border);margin-bottom:24px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
+thead tr{background:var(--bg2)}
+thead th{padding:11px 14px;text-align:left;font-size:9px;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:normal;font-family:'Courier New',monospace}
+th:nth-child(1){color:var(--grey2)}th:nth-child(2){color:var(--sky2)}th:nth-child(3){color:var(--gold2)}th:nth-child(4){color:var(--grey)}
+tbody tr:hover{background:rgba(255,255,255,.018)}
+td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;line-height:1.55}
+tr:last-child td{border-bottom:none}
+td:nth-child(1){font-weight:600;color:var(--cream);min-width:155px;background:rgba(13,30,53,.5);font-size:12px}
+td:nth-child(2){color:#aacce0;min-width:190px}td:nth-child(3){color:#d8c488;min-width:190px}td:nth-child(4){color:var(--grey2);min-width:160px}
+
+/* ─── PILLS ─── */
+.p{display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-top:3px;font-family:'Courier New',monospace}
+.pm{background:rgba(191,64,64,.2);color:var(--red2);border:1px solid rgba(191,64,64,.3)}
+.po{background:rgba(191,122,32,.2);color:var(--amber2);border:1px solid rgba(191,122,32,.3)}
+.pi{background:rgba(42,122,80,.2);color:var(--green2);border:1px solid rgba(42,122,80,.3)}
+.pn{background:rgba(61,143,192,.2);color:var(--sky2);border:1px solid rgba(61,143,192,.3)}
+
+/* ─── LEGEND ─── */
+.legend{display:flex;flex-wrap:wrap;gap:14px;padding:11px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;margin-bottom:18px}
+.li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--grey2)}
+.ld{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* ─── DIFF CARDS ─── */
+.dcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.dc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 16px 16px 20px;position:relative;overflow:hidden}
+.dc::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.dc.maj::before{background:var(--red)}.dc.mod::before{background:var(--amber)}.dc.min::before{background:var(--green)}.dc.nw::before{background:var(--sky)}
+.dc-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.dc-hd h3{font-family:Georgia,serif;font-size:14.5px;font-weight:normal;color:var(--white);line-height:1.3}
+.dc-rows{display:flex;flex-direction:column;gap:7px}
+.dc-row{display:flex;gap:7px;align-items:flex-start;font-size:12px;line-height:1.5}
+.vb{font-size:8.5px;font-weight:700;padding:2px 5px;border-radius:2px;flex-shrink:0;margin-top:2px;font-family:'Courier New',monospace}
+.v1{background:rgba(61,143,192,.2);color:var(--sky2)}.v2{background:rgba(200,160,84,.2);color:var(--gold2)}
+.dc-row span{color:var(--grey2)}
+
+/* ─── CONCLUSION ─── */
+.conc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:24px;margin-top:20px}
+.conc h3{font-family:Georgia,serif;font-size:17px;font-weight:normal;color:var(--white);margin-bottom:10px}
+.conc p{font-size:13px;color:var(--grey2);line-height:1.75}
+.conc p+p{margin-top:12px}
+
+/* ─── FOOTER ─── */
+footer{background:#040a14;border-top:1px solid var(--border);padding:24px;text-align:center}
+footer p{font-size:11.5px;color:var(--grey);line-height:1.7;max-width:860px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div id="hdr-inner">
+    <span class="badge">NHS ESTATES</span>
+    <span id="hdr-title">Ventilation Standards &mdash; Comparative Analysis</span>
+    <span id="hdr-date">March 2026</span>
+  </div>
+</header>
+
+<!-- TAB BAR -->
+<nav id="tabs">
+  <div id="tabs-inner">
+    <button class="tb on"  onclick="go('overview')">Overview</button>
+    <button class="tb"     onclick="go('technical')">Technical Parameters</button>
+    <button class="tb"     onclick="go('operating')">Operating Departments</button>
+    <button class="tb"     onclick="go('filtration')">Filtration &amp; Air Quality</button>
+    <button class="tb"     onclick="go('governance')">Governance &amp; Process</button>
+    <button class="tb"     onclick="go('energy')">Energy &amp; Environment</button>
+    <button class="tb"     onclick="go('findings')">Key Findings</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hero-inner">
+    <p class="eyebrow">Health Technical Memoranda &middot; Side-by-Side Review</p>
+    <h1>HTM 2025 vs <em>HTM 03-01</em><br>Where the Standards Diverge</h1>
+    <p class="hero-sub">A structured expert analysis covering technical, clinical, governance and sustainability differences across 22+ identified divergences between the 1994/1999 and 2021 NHS ventilation standards.</p>
+    <div class="doc-pills">
+      <div class="dp">
+        <div class="dp-tag">Legacy Standard</div>
+        <h3>HTM 2025</h3>
+        <p>Ventilation in Healthcare Premises &mdash; Design Considerations. NHS Estates / The Stationery Office.</p>
+        <span class="dp-yr">1994 / 1999</span>
+      </div>
+      <div class="vs">vs</div>
+      <div class="dp">
+        <div class="dp-tag">Current Standard</div>
+        <h3>HTM 03-01 Part A</h3>
+        <p>Specialised Ventilation for Healthcare Premises &mdash; Concept, Design, Specification, Installation &amp; Acceptance Testing.</p>
+        <span class="dp-yr">2021</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- ══════════ OVERVIEW ══════════ -->
+<section id="panel-overview" class="panel on">
+
+<div class="stats">
+  <div class="sbox"><div class="sn">22+</div><div class="sl">Key Divergences</div></div>
+  <div class="sbox"><div class="sn red">5</div><div class="sl">Major Differences</div></div>
+  <div class="sbox"><div class="sn gold">27</div><div class="sl">Years Between Standards</div></div>
+  <div class="sbox"><div class="sn sky" style="font-size:22px">121&rarr;213</div><div class="sl">Pages (2025 to 03-01)</div></div>
+  <div class="sbox"><div class="sn">3</div><div class="sl">New Governance Roles</div></div>
+</div>
+
+<div class="two">
+  <div class="icard">
+    <h2>HTM 2025</h2>
+    <div class="ic-sub">NHS Estates &middot; 1994 / Reprinted 1999</div>
+    <div class="mr"><span class="mk">Publisher</span><span class="mv">NHS Estates / The Stationery Office</span></div>
+    <div class="mr"><span class="mk">Scope</span><span class="mv">All ventilation in healthcare premises</span></div>
+    <div class="mr"><span class="mk">Structure</span><span class="mv">4 volumes: Mgmt, Design, V&amp;V, Ops</span></div>
+    <div class="mr"><span class="mk">Infection control</span><span class="mv hi">Pre-COVID; general dilution guidance</span></div>
+    <div class="mr"><span class="mk">Net Zero</span><span class="mv">Not addressed</span></div>
+    <div class="mr"><span class="mk">Governance body</span><span class="mv">None formally specified</span></div>
+    <div class="mr"><span class="mk">Ventilation hierarchy</span><span class="mv">No explicit design hierarchy</span></div>
+    <div class="mr"><span class="mk">Energy recovery</span><span class="mv">Optional guidance only</span></div>
+    <div class="mr"><span class="mk">Derogation process</span><span class="mv hi">Not formalised</span></div>
+    <div class="mr"><span class="mk">Filter classification</span><span class="mv">EU Grades 1&ndash;9 + HEPA</span></div>
+  </div>
+  <div class="icard">
+    <h2>HTM 03-01 Part A</h2>
+    <div class="ic-sub">DHSC / NHS England &middot; 4-Nation Endorsed &middot; 2021</div>
+    <div class="mr"><span class="mk">Publisher</span><span class="mv">DHSC / NHS England, Wales &amp; Scotland</span></div>
+    <div class="mr"><span class="mk">Scope</span><span class="mv">Specialised ventilation in healthcare</span></div>
+    <div class="mr"><span class="mk">Structure</span><span class="mv">Part A (design) + Part B (maintenance)</span></div>
+    <div class="mr"><span class="mk">Infection control</span><span class="mv hi">COVID-19 reviewed; airborne transmission addressed</span></div>
+    <div class="mr"><span class="mk">Net Zero</span><span class="mv hi">Explicit NHS 2040 Net Zero Carbon pathway</span></div>
+    <div class="mr"><span class="mk">Governance body</span><span class="mv hi">Ventilation Safety Group (VSG) &mdash; mandatory</span></div>
+    <div class="mr"><span class="mk">Ventilation hierarchy</span><span class="mv hi">Natural &rarr; Mixed-mode &rarr; Mechanical</span></div>
+    <div class="mr"><span class="mk">Energy recovery</span><span class="mv hi">Mandatory on all supply/extract systems</span></div>
+    <div class="mr"><span class="mk">Derogation process</span><span class="mv hi">Formal written VSG approval required</span></div>
+    <div class="mr"><span class="mk">Filter classification</span><span class="mv hi">BS EN 1822 (EPA10, H13, H14)</span></div>
+  </div>
+</div>
+
+<div class="callout">
+  <h3>Expert Assessment &mdash; The Five Headline Differences</h3>
+  <ul>
+    <li><strong>Governance architecture:</strong> HTM 03-01 mandates a Ventilation Safety Group (VSG), Authorised Engineer (Ventilation) [AE(V)] and independent Validator. None existed in HTM 2025, fundamentally restructuring accountability on every project.</li>
+    <li><strong>Infection control:</strong> HTM 03-01 was reviewed against COVID-19 airborne transmission evidence and 27 years of HCAI research &mdash; providing substantially enhanced guidance for isolation, transplant and immunocompromised patient areas not addressed in HTM 2025.</li>
+    <li><strong>Energy regulation:</strong> HTM 03-01 mandates EU ErP Directive 1253/2014 compliance and requires electronically commutated (EC) fans as the default &mdash; a requirement entirely absent from HTM 2025.</li>
+    <li><strong>Derogation accountability:</strong> Any departure from HTM 03-01 must be formally risk-assessed, authorised in writing by the Senior Responsible Owner and supported by the VSG. HTM 2025 contained no equivalent process.</li>
+    <li><strong>Standards alignment:</strong> HTM 03-01 references BS&nbsp;EN&nbsp;1822 (H13/H14), BS&nbsp;EN&nbsp;1886 AHU airtightness and BESA DW143 duct leakage &mdash; replacing the outdated EU Grade filter system of HTM 2025.</li>
+  </ul>
+</div>
+
+</section><!-- /overview -->
+
+
+<!-- ══════════ TECHNICAL PARAMETERS ══════════ -->
+<section id="panel-technical" class="panel">
+
+<div class="sh">
+  <h2>Technical Design Parameters</h2>
+  <p>Direct comparison of core engineering specifications: air change rates, pressures, temperatures, humidity and test requirements.</p>
+</div>
+
+<div class="legend">
+  <div class="li"><div class="ld" style="background:var(--red)"></div>Major &mdash; requires design change</div>
+  <div class="li"><div class="ld" style="background:var(--amber)"></div>Moderate &mdash; clarified or updated</div>
+  <div class="li"><div class="ld" style="background:var(--green)"></div>Minor / presentational</div>
+  <div class="li"><div class="ld" style="background:var(--sky)"></div>New &mdash; not present in HTM 2025</div>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Parameter</th><th>HTM 2025 (1994/99)</th><th>HTM 03-01 (2021)</th><th>Significance</th></tr></thead>
+<tbody>
+<tr>
+  <td>Operating Theatre Temperature</td>
+  <td>Design range 15&ndash;25&deg;C; humidity 40&ndash;60% RH; set-point per room schedule.</td>
+  <td>20&deg;C summer design; 22&deg;C winter design. Max 60% RH at 20&deg;C; min 35% unoccupied; absolute max 70% RH at any time.</td>
+  <td>Explicit winter set-point and humidity floor for unoccupied state are new.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Conventional OR Air Changes</td>
+  <td>Supply specified volumetrically (e.g. 0.65&ndash;0.80&nbsp;m&sup3;/s for OR). ACH not directly stated.</td>
+  <td>Design based on doorway protection calculation for worst-case open door scenario. Fresh air volume maintained.</td>
+  <td>Methodology updated to door-protection-dominant approach.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Recovery Room ACH</td>
+  <td>15 ac/h recommended; balanced airflow.</td>
+  <td>15 ac/h retained. Supply ceiling-mounted; extract at low level near head-end to clear exhaled anaesthetic agents.</td>
+  <td>Rate unchanged; terminal placement now specific.<br><span class="p pi">Minor</span></td>
+</tr>
+<tr>
+  <td>Ward / General Areas ACH</td>
+  <td>Fixed schedules: Treatment 10 ac/h; Staff Change 3 ac/h; WC 10 ac/h; Beverage 5 ac/h.</td>
+  <td>Risk-assessment driven. VSG must agree rates for clinical areas. Natural ventilation hierarchy applies first.</td>
+  <td>Major philosophical shift from fixed schedules to risk-based design.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>Level 2/3 Critical Care Isolation</td>
+  <td>Not addressed as a distinct category for immunocompromised patient protection.</td>
+  <td>&ge;10 ac/h; +5 Pa to general area; EPA10 final filtration; 20&ndash;25&deg;C BMS; max 60% RH.</td>
+  <td>Entirely new requirement responding to HCAI evidence.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>BMT / Oncology Protective Isolation</td>
+  <td>Not separately specified.</td>
+  <td>Dedicated &ldquo;Airborne Protective Facilities&rdquo; category (Table 3). Positive pressure cascade; EPA/HEPA filtration mandated.</td>
+  <td>New clinical category &mdash; critical for immunocompromised safety.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>OR Suite Pressure Differentials</td>
+  <td>OR +25 Pa; Anaesthetic +14 Pa; Disposal &minus;5 Pa; Lay-up +35 Pa. 8-plan standard solution matrix.</td>
+  <td>Similar nominal pressures. Calculation based on worst-case open door with documented air network analysis.</td>
+  <td>Values similar; methodology significantly more rigorous.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Noise &mdash; Conventional OR</td>
+  <td>50 dB(A) overall; 45 dB(A) commissioning; 40 dB(A) design plant level.</td>
+  <td>45 dB(A) max conventional OR. UCV suite: 53 dB(A) theatre/scrub; 48 dB(A) peripheral rooms.</td>
+  <td>Conventional OR tightened; differentiated UCV limits added.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Ductwork Leakage Limit</td>
+  <td>References CIBSE methods; no maximum leakage percentage stated.</td>
+  <td>Maximum 3% per BESA DW143. Air-pressure tests required per section; results recorded in commissioning manual.</td>
+  <td>Specific quantified limit with named standard &mdash; clear tightening.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>AHU Airtightness Testing</td>
+  <td>No specific test standard referenced.</td>
+  <td>BS EN 1886 airtightness test mandatory at pre-commissioning stage.</td>
+  <td>New formal test requirement to current European standard.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Instrument Calibration</td>
+  <td>Commissioning guidance provided; no formal calibration interval stated.</td>
+  <td>All test equipment must hold calibration certificate &le;12 months old, traceable to national standards.</td>
+  <td>Formal metrology requirement &mdash; new accountability measure.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Supply/Extract Fan Interlocking</td>
+  <td>General guidance on fan sequencing only.</td>
+  <td>Supply fan must start first and shut down last vs extract. Explicit mandatory interlock to prevent reverse airflow.</td>
+  <td>Removes design ambiguity on start/stop sequencing.<br><span class="p po">Moderate</span></td>
+</tr>
+</tbody>
+</table></div>
+
+</section><!-- /technical -->
+
+
+<!-- ══════════ OPERATING DEPARTMENTS ══════════ -->
+<section id="panel-operating" class="panel">
+
+<div class="sh">
+  <h2>Operating Department Ventilation</h2>
+  <p>The most technically detailed area of divergence &mdash; conventional theatres, UCV systems, suite layout and acceptance testing.</p>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Aspect</th><th>HTM 2025</th><th>HTM 03-01</th><th>Significance</th></tr></thead>
+<tbody>
+<tr>
+  <td>Terminal/HEPA Filters in Conventional OR</td>
+  <td>&ldquo;Terminal or HEPA filters are not generally required&rdquo; (para 6.3). EU grade filter classification used.</td>
+  <td>HEPA H13/H14 (BS EN 1822) required for high-risk areas. EU grade terminology retired.</td>
+  <td>Shift to BS EN 1822 affects all procurement specs and O&amp;M schedules.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>UCV Canopy &mdash; Vertical Flow Size</td>
+  <td>Min 2.8&nbsp;m &times; 2.8&nbsp;m canopy area. Clearance to fixed partial wall underside 2&nbsp;m from FFL.</td>
+  <td>Size maintained but validated by particle challenge test: &le;10% outer zone, &le;1% inner zone, &le;0.1% centre.</td>
+  <td>Quantified performance acceptance criteria replace implied performance.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>UCV Discharge Velocity</td>
+  <td>Full walls: 0.30&nbsp;m/s at 2&nbsp;m above FFL; partial walls: 0.38&nbsp;m/s; horizontal: 0.40&nbsp;m/s at 1&nbsp;m from filter face.</td>
+  <td>Similar minimum velocities retained. Performance validated by particle penetration challenge test, not velocity alone.</td>
+  <td>Validation methodology fundamentally changed to particle testing.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>UCV Set-Back Mode</td>
+  <td>Set-back to 0.35&nbsp;m&sup3;/s when theatre unoccupied.</td>
+  <td>Set-back retained. Acceptance testing required at both operational and set-back speeds.</td>
+  <td>Set-back now formally tested, not assumed compliant.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Preparation / Lay-Up Room</td>
+  <td>Lay-up at +35 Pa. Standard plans 1a/1b/2a/2b; air flows from prep to OR via transfer grille.</td>
+  <td>Lay-up may equal OR pressure. Air flows prep to OR but not via pressure stabiliser to corridor. Sharing between two theatres explicitly discouraged.</td>
+  <td>More nuanced guidance; operational risks of shared prep rooms noted.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>OR Extract Air Recirculation</td>
+  <td>Recirculation generally discouraged; design guidance provided if used.</td>
+  <td>Extract from operating suites must NOT be recirculated &mdash; explicit prohibition. Thermal wheels permitted; leakage accepted as aerobiologically insignificant (all supply passes through final filter).</td>
+  <td>Prohibition explicit where previously only discouraged.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>AHU Sharing Between Suites</td>
+  <td>Max two operating suites per AHU. Separate AHU if theatre out of use &gt;25% of time.</td>
+  <td>AHU may serve two conventional theatres. Cannot be shared between conventional and UCV suite &mdash; explicit incompatibility.</td>
+  <td>Conventional/UCV incompatibility now stated explicitly &mdash; critical planning constraint.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Ceiling Void Ventilation Units</td>
+  <td>No explicit prohibition on ceiling void mounting.</td>
+  <td>Mounting any ventilation unit in a ceiling void above a clinical space is NOT permitted. Above non-clinical spaces requires formal risk assessment and written VSG agreement.</td>
+  <td>Major new restriction with significant refurbishment implications.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>Theatre Control Panel</td>
+  <td>Panel must include plant status, temp/humidity gauges and set-point adjustment. Display size not specified.</td>
+  <td>Min 25&nbsp;mm character readout. Mode indicator at 1.5&nbsp;m above floor. Permanent notice of selectable modes. Direct-reading pressure gauge within eyeline.</td>
+  <td>Specific ergonomic / human-factors requirements added.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Utility Room (Disposal) Pressure</td>
+  <td>Disposal room at &minus;5 Pa relative to suite.</td>
+  <td>Utility onto clean corridor requires greater negative differential than one onto service corridor &mdash; risk-based differentiation.</td>
+  <td>More nuanced risk framework by corridor type.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Ceiling Terminal Distribution</td>
+  <td>Supply terminals for even distribution; grilles and diffusers to eliminate condensation.</td>
+  <td>Ceiling divided into four quadrants; supply terminal at centre of each quadrant with additional terminals along boundaries as required.</td>
+  <td>Prescriptive quadrant layout replaces general guidance.<br><span class="p po">Moderate</span></td>
+</tr>
+</tbody>
+</table></div>
+
+</section><!-- /operating -->
+
+
+<!-- ══════════ FILTRATION & AIR QUALITY ══════════ -->
+<section id="panel-filtration" class="panel">
+
+<div class="sh">
+  <h2>Filtration &amp; Air Quality</h2>
+  <p>Comparison of filter classification systems, HEPA requirements, extract filtration and air purity standards.</p>
+</div>
+
+<div class="dcg">
+
+<div class="dc maj">
+  <div class="dc-hd"><h3>Filter Classification System</h3><span class="p pm">Major</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>9-grade EU classification (Grades 1&ndash;9) plus HEPA. Grade 7 described as typical for operating rooms.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>BS EN 1822 classification (EPA10, H13, H14). EU grade terminology explicitly retired. Mapped to current European standard.</span></div>
+  </div>
+</div>
+
+<div class="dc maj">
+  <div class="dc-hd"><h3>HEPA Requirements by Area</h3><span class="p pm">Major</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>HEPA described as Grade 10+. Not mandated for conventional theatres &mdash; para 6.3 explicitly states &ldquo;not generally required.&rdquo;</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>EPA10 mandatory for Level 2/3 critical care and BMT areas. H13/H14 for UCV terminal filtration. Application schedules in Appendix 2.</span></div>
+  </div>
+</div>
+
+<div class="dc nw">
+  <div class="dc-hd"><h3>Extract Filtration &mdash; Isolation Rooms</h3><span class="p pn">New</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>No specific guidance on extract filtration for infectious disease isolation rooms.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Filtration not normally required unless discharge is unsafe (e.g. courtyard). EPA/HEPA extract filter cases must be plywood/particleboard for safe incineration.</span></div>
+  </div>
+</div>
+
+<div class="dc nw">
+  <div class="dc-hd"><h3>Activated Carbon Filters</h3><span class="p pn">New</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>No specific guidance on activated carbon filter applications or safe change-out procedures.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Dedicated section covering applications, selection and safe change-out referenced to COSHH regulations and safety cabinet requirements.</span></div>
+  </div>
+</div>
+
+<div class="dc maj">
+  <div class="dc-hd"><h3>Energy Recovery &amp; Cross-Contamination</h3><span class="p pm">Major</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Heat recovery described in Section 4.105 as an option. No obligation to install.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Mandatory on all supply/extract systems. Thermal wheel leakage accepted as aerobiologically insignificant &mdash; all supply passes through final filter. Cleaning access required on both sides.</span></div>
+  </div>
+</div>
+
+<div class="dc mod">
+  <div class="dc-hd"><h3>UCV Recirculation Pre-Filter Grade</h3><span class="p po">Moderate</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>EU3 grade return-air filter required for UCV to protect HEPA from coarse particles (para 6.93).</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Pre-filter specified to BS EN 1822 equivalent. EU3 designation replaced by current standard classification.</span></div>
+  </div>
+</div>
+
+<div class="dc mod">
+  <div class="dc-hd"><h3>UCV Filter &mdash; DOP Test Access</h3><span class="p po">Moderate</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Access point &ge;2&nbsp;m upstream of terminal filter for DOP test; pressure drop monitoring across all filters.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Access point retained. Acceptance now additionally requires particle penetration challenge test: &le;10% outer, &le;1% inner, &le;0.1% centre canopy positions.</span></div>
+  </div>
+</div>
+
+<div class="dc min">
+  <div class="dc-hd"><h3>Fume Cupboard Face Velocity</h3><span class="p pi">Minor</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Average face velocity 0.5&ndash;1.0&nbsp;m/s; minimum at any point within 20% of average; maintained regardless of sash or door position.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Requirements retained with updated COSHH references. LEV discharge stack arrangements expanded &mdash; roof-level discharge preferred.</span></div>
+  </div>
+</div>
+
+</div><!-- /dcg -->
+</section><!-- /filtration -->
+
+
+<!-- ══════════ GOVERNANCE & PROCESS ══════════ -->
+<section id="panel-governance" class="panel">
+
+<div class="sh">
+  <h2>Governance, Process &amp; Accountability</h2>
+  <p>HTM 03-01 introduces a fundamentally different governance architecture &mdash; the most significant structural change between the two standards.</p>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Governance Element</th><th>HTM 2025</th><th>HTM 03-01</th><th>Significance</th></tr></thead>
+<tbody>
+<tr>
+  <td>Ventilation Safety Group (VSG)</td>
+  <td>No equivalent body required or defined.</td>
+  <td>Mandatory. Must approve all derogations, alternative design strategies, ceiling void installations and changes of use in writing. Central to the entire approval architecture.</td>
+  <td>Most fundamental governance change between the two standards.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Authorised / Authorising Engineer</td>
+  <td>Not defined. General reference to NHS engineering expertise.</td>
+  <td>AE(V) role formally defined. Authorising Engineer (AE) role defined. Both are mandatory sign-off authorities referenced throughout.</td>
+  <td>Formalised competency framework consistent with NHS engineering governance.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Independent Validator</td>
+  <td>Implicit &mdash; commissioning engineers verify performance at handover.</td>
+  <td>Mandatory independent Validator at handover. Right to witness or independently retake readings. Handover documentation complete before sign-off issued.</td>
+  <td>Third-party validation mandatory &mdash; removes conflict of interest.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Derogation Process</td>
+  <td>No formal process. Designer used professional judgement with no documented approval trail.</td>
+  <td>Must be risk-assessed, documented, authorised by Senior Responsible Owner in writing and supported by VSG. Schedule of derogations required for external business case approval.</td>
+  <td>Full documented audit trail mandatory &mdash; major accountability improvement.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>Modal Verb Definitions</td>
+  <td>&ldquo;Should&rdquo; used throughout; obligation level often implied or inconsistent.</td>
+  <td>Must = legal compliance. Should = recommendation. May = permission. &ldquo;Shall&rdquo; never used. Definitions explicitly stated in preface.</td>
+  <td>Clearer legal standing &mdash; reduces ambiguity in contract disputes.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Project Stage Compliance Gates</td>
+  <td>Guidance applicable to design stage; no formal stage-gate structure.</td>
+  <td>Full compliance expected from PID/SOC stage. Derogations jeopardise business case approval. Lifecycle guidance including mid-life plant updates included.</td>
+  <td>Integrated into NHS capital project governance &mdash; derogations carry formal consequences.<br><span class="p pm">Major</span></td>
+</tr>
+<tr>
+  <td>Ventilation System Inventory</td>
+  <td>Not required.</td>
+  <td>Standard labelling and identification methodology introduced. Inventory of all installed systems required as a project deliverable.</td>
+  <td>New operational asset management obligation supporting Part B compliance.<br><span class="p pn">New</span></td>
+</tr>
+<tr>
+  <td>Refurbishment &amp; Change of Use</td>
+  <td>General reference to applicability for existing sites and upgrading works.</td>
+  <td>Specific guidance on refurbishments, change of use and mid-life plant updating. VSG review required when existing installation function changes.</td>
+  <td>Prevents inadvertent downgrading of ventilation in repurposed spaces.<br><span class="p po">Moderate</span></td>
+</tr>
+<tr>
+  <td>Resilience &amp; Diversity</td>
+  <td>General guidance on plant redundancy (e.g. max two theatres per AHU). No formal resilience framework.</td>
+  <td>Resilience and diversity formally addressed. Critical systems require defined fallback strategies.</td>
+  <td>Structured approach to critical system resilience and business continuity.<br><span class="p po">Moderate</span></td>
+</tr>
+</tbody>
+</table></div>
+
+</section><!-- /governance -->
+
+
+<!-- ══════════ ENERGY & ENVIRONMENT ══════════ -->
+<section id="panel-energy" class="panel">
+
+<div class="sh">
+  <h2>Energy, Environment &amp; Sustainability</h2>
+  <p>HTM 03-01 was developed within the NHS Net Zero Carbon strategy and EU ErP Directive context &mdash; areas entirely absent from HTM 2025.</p>
+</div>
+
+<div class="dcg">
+
+<div class="dc nw">
+  <div class="dc-hd"><h3>NHS Net Zero Carbon Obligation</h3><span class="p pn">New</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>No sustainability or carbon reduction requirements. Energy noted only in context of annual consumption calculations.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Explicit alignment with NHS Net Zero target (2040 direct emissions). Healthcare &asymp;5.4% of UK greenhouse gases. All ventilation design must minimise whole-life carbon cost.</span></div>
+  </div>
+</div>
+
+<div class="dc maj">
+  <div class="dc-hd"><h3>Fan Technology &mdash; EC Fan Requirement</h3><span class="p pm">Major</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Centrifugal, axial and mixed-flow fans discussed. Variable speed drives mentioned for energy saving; no technology preference mandated.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Electronically commutated (EC) fans recommended as default &mdash; proven most energy-efficient. EU ErP Regulation 1253/2014 compliance required, significantly reducing permissible fan power.</span></div>
+  </div>
+</div>
+
+<div class="dc maj">
+  <div class="dc-hd"><h3>Energy Recovery &mdash; Mandatory Status</h3><span class="p pm">Major</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Heat recovery systems described in Section 4.105 as design options. No obligation to install.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>MANDATORY on all supply/extract systems. Omission only permitted under EU ErP Directive 1253/2014. Cleaning access required on both sides of all heat recovery devices.</span></div>
+  </div>
+</div>
+
+<div class="dc nw">
+  <div class="dc-hd"><h3>Natural Ventilation Hierarchy</h3><span class="p pn">New</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Natural ventilation described as one of several acceptable methods. No formal priority over mechanical systems.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Explicit hierarchy: Natural first, then mixed-mode, then mechanical as last resort. Max 3&nbsp;m depth for natural ventilation before supplementation required.</span></div>
+  </div>
+</div>
+
+<div class="dc mod">
+  <div class="dc-hd"><h3>Mixed-Mode Ventilation</h3><span class="p po">Moderate</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Natural and mechanical discussed separately. Mixed-mode not formally recognised or defined.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Mixed-mode formally recognised. Complex air paths require designer airflow diagram. CIBSE AM13 referenced. Acceptable in non-clinical spaces.</span></div>
+  </div>
+</div>
+
+<div class="dc mod">
+  <div class="dc-hd"><h3>Lifecycle Cost Consideration</h3><span class="p po">Moderate</span></div>
+  <div class="dc-rows">
+    <div class="dc-row"><span class="vb v1">2025</span><span>Plant selection focused on capital cost and engineering performance. Lifecycle cost not explicitly part of design criteria.</span></div>
+    <div class="dc-row"><span class="vb v2">03-01</span><span>Design must specify lowest lifecycle environmental cost. Mid-life plant updates addressed. Guidance on upgrading existing installations to meet current energy standards.</span></div>
+  </div>
+</div>
+
+</div><!-- /dcg -->
+</section><!-- /energy -->
+
+
+<!-- ══════════ KEY FINDINGS ══════════ -->
+<section id="panel-findings" class="panel">
+
+<div class="sh">
+  <h2>Key Findings &amp; Practitioner Actions</h2>
+  <p>The most consequential divergences and the actions required when moving from HTM 2025 to HTM 03-01 compliance.</p>
+</div>
+
+<div class="callout">
+  <h3>Critical Actions for Practitioners Moving to HTM 03-01</h3>
+  <ul>
+    <li><strong>Establish a Ventilation Safety Group (VSG)</strong> before any design work begins. This mandatory governance body must formally approve derogations and sign off major design decisions in writing.</li>
+    <li><strong>Appoint an Authorised Engineer (Ventilation) [AE(V)] and an independent Validator.</strong> Both are new mandatory roles &mdash; their absence will block formal project handover and sign-off.</li>
+    <li><strong>Re-specify all filter classifications</strong> from EU Grade numbering (1&ndash;9) to BS EN 1822 (EPA10, H13, H14). This affects all procurement schedules, O&amp;M manuals and acceptance test criteria.</li>
+    <li><strong>Remove ceiling void AHUs and FCUs from clinical space designs.</strong> HTM 03-01 explicitly prohibits this. Refurbishment projects must relocate existing units or obtain formal written VSG dispensation.</li>
+    <li><strong>Make energy recovery mandatory on all supply/extract systems</strong> &mdash; plate heat exchanger, run-around coil or thermal wheel. Omission requires regulatory justification under EU ErP 1253/2014.</li>
+    <li><strong>Switch to EC fans as the default technology</strong> rather than belt-drive centrifugal units &mdash; consistent with EU ErP Directive compliance and the HTM 03-01 recommendation.</li>
+    <li><strong>Upgrade UCV acceptance testing</strong> from velocity measurement to full particle penetration challenge tests: &le;10% outer zone, &le;1% inner zone, &le;0.1% centre. DOP test access must be maintained.</li>
+    <li><strong>Formalise all derogation documentation.</strong> Any departure requires written risk assessment, SRO authorisation and VSG support &mdash; with a schedule of derogations for externally approved business cases.</li>
+    <li><strong>Apply the natural ventilation hierarchy to non-clinical areas.</strong> Start from natural/mixed-mode; specify mechanical only when the first two options are proven inadequate.</li>
+    <li><strong>Create and maintain a ventilation system inventory</strong> using the HTM 03-01 standard labelling methodology &mdash; now a mandatory project deliverable.</li>
+  </ul>
+</div>
+
+<div class="tw"><table>
+<thead><tr><th>Category</th><th>Divergences Found</th><th>Highest Severity</th><th>Primary Design Impact</th></tr></thead>
+<tbody>
+<tr>
+  <td>Technical Parameters</td>
+  <td>12 identified</td>
+  <td><span class="p pm">Major</span></td>
+  <td>Ductwork leakage limits, ward ACH methodology, isolation room specs &mdash; all require design revision.</td>
+</tr>
+<tr>
+  <td>Operating Departments</td>
+  <td>11 identified</td>
+  <td><span class="p pm">Major</span></td>
+  <td>Ceiling void prohibition, OR extract recirculation ban, UCV validation method &mdash; significant for new build and refurbishment.</td>
+</tr>
+<tr>
+  <td>Filtration &amp; Air Quality</td>
+  <td>8 identified</td>
+  <td><span class="p pm">Major</span></td>
+  <td>Filter classification change (EU Grade &rarr; BS EN 1822) affects all procurement and maintenance schedules.</td>
+</tr>
+<tr>
+  <td>Governance &amp; Process</td>
+  <td>9 identified</td>
+  <td><span class="p pn">New</span></td>
+  <td>VSG, AE(V) and Validator roles are mandatory &mdash; affect project structure, procurement and contractual arrangements.</td>
+</tr>
+<tr>
+  <td>Energy &amp; Environment</td>
+  <td>6 identified</td>
+  <td><span class="p pm">Major</span></td>
+  <td>Mandatory energy recovery, EC fan specification, Net Zero alignment &mdash; affects capital selection and whole-life cost modelling.</td>
+</tr>
+</tbody>
+</table></div>
+
+<div class="conc">
+  <h3>Overall Expert Conclusion</h3>
+  <p>HTM 03-01 represents a comprehensive modernisation rather than an incremental update to HTM 2025. The most consequential shifts are in governance architecture (VSG, AE(V), independent validation), infection control scope (driven by 27 years of HCAI research and COVID-19 airborne transmission review), energy regulation compliance (EC fans, mandatory heat recovery aligned to EU ErP Directive 1253/2014), and adoption of current European test standards (BS EN 1822 filtration, BS EN 1886 AHU airtightness, BESA DW143 duct leakage testing).</p>
+  <p>Facilities operating under HTM 2025 should treat migration to HTM 03-01 as a substantive compliance gap exercise, not a routine update. Any NHS capital project entering the approval process from PID or SOC stage onwards must demonstrate full HTM 03-01 compliance as the baseline &mdash; with all derogations formally documented and VSG-approved.</p>
+</div>
+
+</section><!-- /findings -->
+
+</main>
+
+<footer>
+  <p>Expert comparative analysis of <strong>Health Technical Memorandum 2025</strong> (NHS Estates, 1994/1999) and <strong>Health Technical Memorandum 03-01 Part A</strong> (DHSC, 2021).<br>
+  For reference and professional discussion only. Always consult the current published HTM and seek advice from an Authorised Engineer (Ventilation) for project-specific compliance. &copy; 2026</p>
+</footer>
+
+<script>
+var TABS = ['overview','technical','operating','filtration','governance','energy','findings'];
+
+function go(id) {
+  // hide every panel
+  for (var i = 0; i < TABS.length; i++) {
+    var p = document.getElementById('panel-' + TABS[i]);
+    if (p) p.className = 'panel';
+  }
+  // show target panel
+  var show = document.getElementById('panel-' + id);
+  if (show) show.className = 'panel on';
+
+  // update all buttons
+  var btns = document.querySelectorAll('.tb');
+  for (var j = 0; j < btns.length; j++) {
+    var oc = btns[j].getAttribute('onclick') || '';
+    btns[j].className = oc.indexOf("'"+id+"'") !== -1 ? 'tb on' : 'tb';
+  }
+
+  // scroll to just below the sticky bars
+  window.scrollTo(0, document.getElementById('main').offsetTop - 130);
+}
+
+// ensure overview is shown on load
+go('overview');
+</script>
+</body>
+</html>
